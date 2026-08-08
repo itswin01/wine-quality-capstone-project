@@ -1,0 +1,6 @@
+/model.pkl
+/metrics.json
+/data
+__pycache__/
+*.pyc
+.dvc/config.local
