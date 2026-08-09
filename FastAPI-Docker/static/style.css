@@ -1,0 +1,306 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f5f7;
+    color: #222;
+    min-height: 100vh;
+}
+
+.page {
+    width: 100%;
+}
+
+
+/* HERO */
+
+.hero {
+    background: #181818;
+    color: white;
+    padding: 55px 20px 45px;
+    text-align: center;
+}
+
+.badge {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    border: 1px solid #666;
+    border-radius: 20px;
+    padding: 8px 14px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 46px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    color: #cfcfcf;
+    font-size: 17px;
+    max-width: 650px;
+    margin: auto;
+    line-height: 1.6;
+}
+
+.pipeline {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    color: #d8d8d8;
+    font-size: 14px;
+}
+
+
+/* CONTENT */
+
+.content {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+    margin-bottom: 25px;
+}
+
+.section-heading h2 {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.section-heading p {
+    color: #777;
+    margin-bottom: 28px;
+}
+
+
+/* FORM */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 13px 45px 13px 14px;
+    border: 1px solid #d7d7d7;
+    border-radius: 9px;
+    font-size: 15px;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #222;
+}
+
+.input-group small {
+    position: absolute;
+    right: 12px;
+    bottom: 13px;
+    color: #888;
+    font-size: 11px;
+}
+
+
+/* BUTTON */
+
+button {
+    width: 100%;
+    margin-top: 30px;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    background: #181818;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #333;
+}
+
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+
+/* RESULT */
+
+.hidden {
+    display: none;
+}
+
+.result-card {
+    border: 1px solid #ddd;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-label {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.score {
+    font-size: 52px;
+    font-weight: 700;
+}
+
+.scale {
+    font-size: 20px;
+    color: #888;
+}
+
+.quality-badge {
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-weight: 700;
+    background: #eee;
+}
+
+.quality-bar {
+    width: 100%;
+    height: 12px;
+    background: #e7e7e7;
+    border-radius: 20px;
+    margin: 25px 0;
+    overflow: hidden;
+}
+
+#quality-progress {
+    height: 100%;
+    width: 0%;
+    background: #222;
+    border-radius: 20px;
+    transition: width 0.7s ease;
+}
+
+
+/* INTERPRETATION */
+
+.interpretation {
+    border-top: 1px solid #eee;
+    padding-top: 25px;
+}
+
+.interpretation h3 {
+    margin-bottom: 10px;
+}
+
+.interpretation p {
+    color: #555;
+    line-height: 1.7;
+}
+
+.note {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* INFO */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.info-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3 {
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+    font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 22px;
+    }
+
+    .pipeline {
+        flex-direction: column;
+    }
+}

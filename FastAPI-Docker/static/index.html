@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wine Quality Predictor</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="page">
+
+        <header class="hero">
+            <div class="badge">MLFLOW • FASTAPI • DOCKER</div>
+
+            <h1>Wine Quality Predictor</h1>
+
+            <p>
+                Estimate the quality of red wine using its
+                physicochemical properties.
+            </p>
+
+            <div class="pipeline">
+                <span>Wine Properties</span>
+                <span>→</span>
+                <span>ML Model</span>
+                <span>→</span>
+                <span>Quality Score</span>
+            </div>
+        </header>
+
+
+        <main class="content">
+
+            <section class="card">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>Wine Characteristics</h2>
+                        <p>
+                            Enter the laboratory measurements for your wine.
+                        </p>
+                    </div>
+                </div>
+
+
+                <form id="prediction-form">
+
+                    <div class="form-grid">
+
+                        <div class="input-group">
+                            <label for="fixed_acidity">
+                                Fixed Acidity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="fixed_acidity"
+                                value="7.4"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="volatile_acidity">
+                                Volatile Acidity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="volatile_acidity"
+                                value="0.7"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="citric_acid">
+                                Citric Acid
+                            </label>
+
+                            <input
+                                type="number"
+                                id="citric_acid"
+                                value="0.0"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="residual_sugar">
+                                Residual Sugar
+                            </label>
+
+                            <input
+                                type="number"
+                                id="residual_sugar"
+                                value="1.9"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="chlorides">
+                                Chlorides
+                            </label>
+
+                            <input
+                                type="number"
+                                id="chlorides"
+                                value="0.076"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="free_sulfur_dioxide">
+                                Free SO₂
+                            </label>
+
+                            <input
+                                type="number"
+                                id="free_sulfur_dioxide"
+                                value="11"
+                                step="any"
+                                required
+                            >
+
+                            <small>mg/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="total_sulfur_dioxide">
+                                Total SO₂
+                            </label>
+
+                            <input
+                                type="number"
+                                id="total_sulfur_dioxide"
+                                value="34"
+                                step="any"
+                                required
+                            >
+
+                            <small>mg/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="density">
+                                Density
+                            </label>
+
+                            <input
+                                type="number"
+                                id="density"
+                                value="0.9978"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/cm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="ph">
+                                pH
+                            </label>
+
+                            <input
+                                type="number"
+                                id="ph"
+                                value="3.51"
+                                step="any"
+                                required
+                            >
+
+                            <small>0–14 scale</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="sulphates">
+                                Sulphates
+                            </label>
+
+                            <input
+                                type="number"
+                                id="sulphates"
+                                value="0.56"
+                                step="any"
+                                required
+                            >
+
+                            <small>g/dm³</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="alcohol">
+                                Alcohol
+                            </label>
+
+                            <input
+                                type="number"
+                                id="alcohol"
+                                value="9.4"
+                                step="any"
+                                required
+                            >
+
+                            <small>% vol.</small>
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit" id="predict-button">
+                        Predict Wine Quality
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <section id="result-section" class="card result-card hidden">
+
+                <div class="result-header">
+                    <div>
+                        <p class="result-label">
+                            PREDICTED QUALITY
+                        </p>
+
+                        <div class="score">
+                            <span id="score">--</span>
+                            <span class="scale">/ 10</span>
+                        </div>
+                    </div>
+
+                    <div id="quality-badge" class="quality-badge">
+                        --
+                    </div>
+                </div>
+
+
+                <div class="quality-bar">
+                    <div id="quality-progress"></div>
+                </div>
+
+
+                <div class="interpretation">
+
+                    <h3>What does this mean?</h3>
+
+                    <p id="interpretation-text">
+                        Your prediction will appear here.
+                    </p>
+
+                </div>
+
+
+                <div class="note">
+
+                    <strong>Important:</strong>
+
+                    This is a machine-learning estimate based on
+                    physicochemical measurements. It is not a substitute
+                    for professional wine tasting or laboratory assessment.
+
+                </div>
+
+            </section>
+
+
+            <section class="info-grid">
+
+                <div class="info-card">
+
+                    <h3>How it works</h3>
+
+                    <p>
+                        The application sends the 11 wine measurements
+                        to a FastAPI prediction endpoint. The trained
+                        regression model then estimates the wine's
+                        quality score.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>Quality Scale</h3>
+
+                    <p>
+                        The dataset uses a quality score from 0 to 10.
+                        Higher scores represent wines that received
+                        higher quality ratings in the underlying dataset.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <h3>Model Pipeline</h3>
+
+                    <p>
+                        The model is tracked using MLflow, stored in the
+                        MLflow Model Registry, fetched from DagsHub,
+                        and packaged into a Docker image for inference.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <footer>
+
+            <p>
+                Wine Quality MLOps Capstone
+                • FastAPI
+                • MLflow
+                • Docker
+            </p>
+
+        </footer>
+
+    </div>
+
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
