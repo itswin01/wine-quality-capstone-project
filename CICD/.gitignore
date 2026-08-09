@@ -1,0 +1,6 @@
+data/
+model/
+metrics.json
+__pycache__/
+*.pyc
+.pytest_cache/

@@ -1,0 +1,125 @@
+name: Wine Quality CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # Checkout, set up Python, install dependencies, run tests.
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          cd CICD
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          cd CICD
+          pytest tests/ -v
+
+  # Run the training pipeline and enforce the R² quality gate.
+  train_and_evaluate:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          cd CICD
+          pip install -r requirements.txt
+
+      - name: Prepare data
+        run: |
+          cd CICD
+          python src/prepare.py
+
+      - name: Train Random Forest Regressor
+        run: |
+          cd CICD
+          python src/train.py
+
+      - name: Evaluate model (Quality Gate)
+        run: |
+          cd CICD
+          python src/evaluate.py
+
+      - name: Upload model + metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-and-metrics
+          path: |
+            CICD/model/
+            CICD/metrics.json
+
+  # Deploy the trained model to Hugging Face Hub (push to main only).
+  deploy_to_huggingface:
+    needs: train_and_evaluate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          cd CICD
+          pip install -r requirements.txt
+
+      - name: Prepare, Train and Evaluate
+        run: |
+          cd CICD
+          python src/prepare.py
+          python src/train.py
+          python src/evaluate.py
+
+      - name: Push model to Hugging Face Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_REPO_ID: ${{ vars.HF_REPO_ID }}
+        run: |
+          cd CICD
+          python src/register.py
+
+  # Build the FastAPI Docker image after tests pass.
+  docker_build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build FastAPI Docker image
+        run: |
+          docker build \
+            --build-arg MLFLOW_TRACKING_URI="${{ secrets.MLFLOW_TRACKING_URI }}" \
+            --build-arg MLFLOW_TRACKING_USERNAME="${{ secrets.MLFLOW_TRACKING_USERNAME }}" \
+            --build-arg MLFLOW_TRACKING_PASSWORD="${{ secrets.MLFLOW_TRACKING_PASSWORD }}" \
+            -t wine-quality-fastapi:ci \
+            FastAPI-Docker
