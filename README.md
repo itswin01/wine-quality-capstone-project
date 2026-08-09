@@ -13,11 +13,11 @@ physicochemical measurements (acidity, sugar, chlorides, sulphates, alcohol, etc
 
 | Resource | Link |
 |----------|------|
-| GitHub Repository | _add your repo URL_ |
-| DagsHub Experiments (MLFlow) | _add your DagsHub experiments URL_ |
-| MLflow Model Registry (MLFlow) | _add your DagsHub Models URL_ |
-| Hugging Face Model (CICD) | _add your Hugging Face model URL_ |
-| Docker Hub (FastAPI-Docker) | _add your Docker Hub image URL_ |
+| GitHub Repository | https://github.com/itswin01/wine-quality-capstone-project |
+| DagsHub Experiments (MLFlow) | https://dagshub.com/itswin01/wine-quality-capstone-project.mlflow |
+| MLflow Model Registry (MLFlow) | https://dagshub.com/itswin01/wine-quality-capstone-project.mlflow/#/models/wine-quality-model |
+| Hugging Face Model (CICD) | https://huggingface.co/itswin01/wine-quality-model |
+| Docker Hub (FastAPI-Docker) | https://hub.docker.com/r/itswin01/wine-quality-fastapi |
 
 ---
 
@@ -37,7 +37,7 @@ physicochemical measurements (acidity, sugar, chlorides, sulphates, alcohol, etc
 
 ## Modules
 
-### 📁 DVC-ML-Pipeline — Data Version Control (DVC)
+### DVC-ML-Pipeline — Data Version Control (DVC)
 
 A reproducible five-stage ML pipeline built with **DVC**: data ingestion →
 preprocessing → feature engineering → model building → model evaluation. The dataset is
@@ -48,7 +48,7 @@ tracked so the whole pipeline reproduces with a single `dvc repro`.
 
 ---
 
-### 📁 MLFlow — Experiment Tracking with DagsHub
+### MLFlow — Experiment Tracking with DagsHub
 
 Experiment tracking with **MLflow**, using **DagsHub** as the remote tracking server.
 Three regressors (Linear Regression, Random Forest, XGBoost) are trained and their
@@ -59,7 +59,7 @@ best model is registered in the **MLflow Model Registry** as `wine-quality-model
 
 ---
 
-### 📁 FastAPI-Docker — Dockerized Inference API
+### FastAPI-Docker — Dockerized Inference API
 
 A **FastAPI** service that serves the **registered** model pulled from the MLflow Model
 Registry, containerized with **Docker**. The model is fetched and baked into the image at
@@ -69,13 +69,57 @@ build time so the container runs offline. Intended to be built and run on **Ubun
 
 ---
 
-### 📁 CICD — CI/CD Pipeline with GitHub Actions
+### CICD — CI/CD Pipeline with GitHub Actions
 
 An automated **GitHub Actions** workflow that runs on every push/PR to `main`: checkout →
 set up Python → install dependencies → run tests → train + evaluate (R² quality gate) →
 **deploy to Hugging Face Hub** → **build the FastAPI Docker image**.
 
 **Tools:** GitHub Actions, PyTest, Docker, Hugging Face Hub, Scikit-learn, Python
+
+---
+
+## Using the Application (Docker Hub)
+
+The FastAPI service is published as a ready-to-run image on Docker Hub:
+
+**https://hub.docker.com/r/itswin01/wine-quality-fastapi**
+
+An external user does **not** need to clone this repository or hold any DagsHub
+credentials — the trained MLflow model is **baked into the image at build time**. The
+only requirement is Docker.
+
+### Quick start
+
+**1. Pull the published image:**
+
+```bash
+docker pull itswin01/wine-quality-fastapi:latest
+```
+
+**2. Run the container:**
+
+```bash
+docker run -p 8000:8000 itswin01/wine-quality-fastapi:latest
+```
+
+**3. Open the app:**
+
+- Prediction UI → http://localhost:8000
+- API docs (Swagger) → http://localhost:8000/docs
+
+### End-to-end flow
+
+```text
+Docker Hub → pull image → run container → FastAPI starts
+  → open localhost:8000 → enter 11 wine characteristics
+  → "Predict Wine Quality" → /predict endpoint → MLflow model
+  → predicted quality score (/10) + plain-language interpretation
+```
+
+> **Why it just works:** the MLflow-registered model is packaged inside the Docker image
+> during the build, so the external user never downloads the model separately or
+> configures DagsHub. Pull → run → predict.
 
 ---
 
@@ -101,3 +145,10 @@ set up Python → install dependencies → run tests → train + evaluate (R² q
 **Wine Quality (Red)** — UCI Machine Learning Repository. 1,599 samples, 11
 physicochemical input features, and an integer `quality` target (0–10, observed range
 3–8).
+
+---
+
+## Author
+
+**Tejaswin Bhola**
+SSN College of Engineering
